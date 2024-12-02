@@ -1,0 +1,2 @@
+connection-string - mongodb+srv://trashogreen_admin:<db_password>@cluster0.wn8e5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+password- trashogreenadmin
