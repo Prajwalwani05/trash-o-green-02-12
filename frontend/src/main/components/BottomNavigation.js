@@ -1,82 +1,495 @@
+// import * as React from 'react';
+// import BottomNavigation from '@mui/material/BottomNavigation';
+// import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+// import { useNavigate, useLocation } from 'react-router-dom';
+// import { CalendarDots, ClipboardText, Clock, House, ShoppingCartSimple} from "@phosphor-icons/react";
+// import { useUser } from '../../context/UserContext';
+
+// export default function FixedBottomNavigation() {
+//   const navigate = useNavigate();
+//   const location = useLocation();
+//   const [value, setValue] = React.useState(location.pathname); // Initialize with the current path
+//   const [tokenFlag, setTokenFlag] = React.useState(false);
+//   const [viewNavigation, setViewNavigation] = React.useState('user');
+//   const { user } = useUser();
+
+//   React.useEffect(() => {
+//     setTokenFlag(!!user);
+//     setValue(location.pathname); // Update the value whenever location changes
+//     console.log(user);
+//     // if(user.role === 'Trashman'){
+//     //   setViewNavigation('Trashman');
+//     // }
+//     // else if(user.role === 'Admin'){
+//     //   setViewNavigation('Admin');
+//     // }
+//     // else{
+//     //   setViewNavigation('user');
+//     // }
+//   }, [location.pathname, user]); // Depend on both location.pathname and user
+  
+//   const handleNavigation = (path) => {
+//     navigate(path);
+//   };
+
+//   return (
+   
+//         <BottomNavigation
+//           showLabels
+//           value={value}
+//           onChange={(event, newValue) => setValue(newValue)}
+//           sx={{ backgroundImage:
+//             "radial-gradient(80% 80% at 50% 20%, rgb(204, 242, 218), transparent)", boxShadow: '0 -4px 5px rgba(19, 48, 14, 0.14)' }}
+//           style={{ position: 'fixed', bottom: '-1px', width:'100%', zIndex: 1000 }}
+//         >
+//           <BottomNavigationAction
+//           sx={{maxWidth:'none', minWidth:'auto',
+//             '& .MuiBottomNavigationAction-label.Mui-selected': {
+//               fontSize: '0.8rem',
+//               color:'green'
+//             },
+//             '& .MuiBottomNavigationAction-label': {
+//               fontSize: '0.7rem',
+//             },
+//           }}
+//             value="/" label="Home"
+//             icon={<House  size={20} color={value === '/' ? "green" : "gray"}  weight= {value === '/' ? "fill": "regular"}/>}
+//             onClick={() => handleNavigation('/')}
+//           />
+//           <BottomNavigationAction
+//         sx={{maxWidth:'none', minWidth:'auto',
+//           '& .MuiBottomNavigationAction-label.Mui-selected': {
+//             fontSize: '0.8rem',
+//             color:'green'
+//           },
+//           '& .MuiBottomNavigationAction-label': {
+//             fontSize: '0.7rem',
+//           },
+//         }}
+//             value="/booking" label="Schedule"
+//             icon={<ClipboardText size={20} color={value === '/booking' ? "green" : "gray"}  weight= {value === '/booking' ? "fill": "regular"}/>}
+//             onClick={() => handleNavigation('/booking')}
+//           />
+//           { tokenFlag &&
+//             <BottomNavigationAction
+//            sx={{maxWidth:'none', minWidth:'auto',
+//             '& .MuiBottomNavigationAction-label.Mui-selected': {
+//               fontSize: '0.8rem',
+//               color:'green'
+//             },
+//             '& .MuiBottomNavigationAction-label': {
+//               fontSize: '0.7rem',
+//             },
+//           }}
+//             value="/myBooking" label="Bookings"
+//             icon={<Clock size={20} color={value === '/myBooking' ? "green" : "gray"}  weight= {value === '/myBooking' ? "fill": "regular"}/>}
+//             onClick={() => handleNavigation('/myBooking')}
+//           />}
+//           <BottomNavigationAction
+//           sx={{maxWidth:'none', minWidth:'auto',
+//             '& .MuiBottomNavigationAction-label.Mui-selected': {
+//               fontSize: '0.8rem',
+//               color:'green'
+//             },
+//             '& .MuiBottomNavigationAction-label': {
+//               fontSize: '0.7rem',
+//             },
+//           }}
+//           disabled
+//             value="/products"
+//             label="Products"
+//             icon={<ShoppingCartSimple   size={20} color={value === '/products' ? "green" : "gray"}  weight= {value === '/products' ? "fill": "regular"}/>}
+//             onClick={() => handleNavigation('/products')}
+//           />
+//         </BottomNavigation>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import Paper from '@mui/material/Paper';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import { useNavigate, useLocation } from 'react-router-dom';
-import CallRoundedIcon from '@mui/icons-material/CallRounded';
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import LocalShippingRoundedIcon from '@mui/icons-material/LocalShippingRounded';
-import MobileFriendlyRoundedIcon from '@mui/icons-material/MobileFriendlyRounded';
-import HistoryToggleOffRoundedIcon from '@mui/icons-material/HistoryToggleOffRounded';
+import { CalendarDots, ClipboardText, Clock, House, Person, ShoppingCartSimple} from "@phosphor-icons/react";
+import { useUser } from '../../context/UserContext';
+
 export default function FixedBottomNavigation() {
   const navigate = useNavigate();
   const location = useLocation();
   const [value, setValue] = React.useState(location.pathname); // Initialize with the current path
+  const [tokenFlag, setTokenFlag] = React.useState(false);
+  const [viewNavigation, setViewNavigation] = React.useState('user');
+  const { user } = useUser();
 
   React.useEffect(() => {
-    // Update value when the location changes
-    setValue(location.pathname);
-  }, [location]);
-
+    setTokenFlag(!!user);
+    setValue(location.pathname); // Update the value whenever location changes
+    if(user){
+      if(user.userRole === 'Trashman'){
+        setViewNavigation('Trashman');
+      }
+      else if(user.userRole === 'Admin'){
+        setViewNavigation('Admin');
+      }
+      else{
+        setViewNavigation('user');
+      }
+    }
+    
+  }, [location.pathname, user]); // Depend on both location.pathname and user
+  
   const handleNavigation = (path) => {
     navigate(path);
   };
 
   return (
-    <Box sx={{ pb: 0,mt:6, backgroundColor: 'transparent' }}>
-      <CssBaseline />
-      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+    <>
+    {
+      (viewNavigation === 'user') ?
+      (
         <BottomNavigation
-          showLabels
-          value={value}
-          onChange={(event, newValue) => setValue(newValue)}
-          sx={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}
-        >
-          <BottomNavigationAction
-            sx={{
-              color: value === '/' ? '#3a5a40 !important' : 'grey',
-              fontWeight:'normal'
-            }}
-            label="Home"
-            value="/"
-            icon={<HomeRoundedIcon style={{fontSize:'20px'}}/>}
-            onClick={() => handleNavigation('/')}
-          />
-          <BottomNavigationAction
-            sx={{
-              color: value === '/booking' ? '#3a5a40 !important' : 'grey',
-              fontWeight:'normal'
-            }}
-            label="Book"
-            value="/booking"
-            icon={<MobileFriendlyRoundedIcon style={{fontSize:'20px'}}/>}
-            onClick={() => handleNavigation('/booking')}
-          />
-          <BottomNavigationAction
-            sx={{
-              color: value === '/myBooking' ? '#3a5a40 !important' : 'grey',
-              fontWeight:'normal'
-            }}
-            label="Pickups" 
-            value="/myBooking"
-            icon={<LocalShippingRoundedIcon style={{fontSize:'20px'}}/>}
-            onClick={() => handleNavigation('/myBooking')}
-          />
-          <BottomNavigationAction
-            sx={{
-              color: value === '/profile' ? '#3a5a40 !important' : 'grey',
-              fontWeight:'normal'
-            }}
-            label="Profile"
+      showLabels
+      value={value}
+      onChange={(event, newValue) => setValue(newValue)}
+      // sx={{ backgroundImage:
+      //   "radial-gradient(80% 80% at 50% 20%, rgba(253, 255, 254, 0.24), transparent)", boxShadow: '0 -4px 5px rgba(19, 48, 14, 0.14)' }}
+      style={{height:'62px', padding:'5px', backgroundColor:'rgb(255, 255, 255)', position: 'fixed', bottom: '-1px', width:'100%', zIndex: 1000, boxShadow: '0 -4px 5px rgba(19, 48, 14, 0.14)' }}
+    >
+      <BottomNavigationAction
+      sx={{maxWidth:'none', minWidth:'auto',
+        '& .MuiBottomNavigationAction-label.Mui-selected': {
+          fontSize: '0.8rem',
+          color:'green',
+          fontWeight:'800',
+        },
+        '&.Mui-selected':{
+          backgroundColor: '#e8ffe8',
+          border: '1px solid #7aca7a',
+          margin: '2px',
+          borderRadius: '15px',
+        },
+        '& .MuiBottomNavigationAction-label': {
+          fontSize: '0.7rem',
+        },
+      }}
+        value="/" label="Home"
+        icon={<House  size={20} color={value === '/' ? "green" : "gray"}  weight= {value === '/' ? "fill": "regular"}/>}
+        onClick={() => handleNavigation('/')}
+      />
+      <BottomNavigationAction
+    sx={{maxWidth:'none', minWidth:'auto',
+      '& .MuiBottomNavigationAction-label.Mui-selected': {
+        fontSize: '0.8rem',
+        color:'green'
+      },
+      '&.Mui-selected':{
+        backgroundColor: '#e8ffe8',
+        border: '1px solid #7aca7a',
+        margin: '2px',
+        borderRadius: '15px',
+      },
+      '& .MuiBottomNavigationAction-label': {
+        fontSize: '0.7rem',
+      },
+    }}
+        value="/booking" label="Schedule"
+        icon={<ClipboardText size={20} color={value === '/booking' ? "green" : "gray"}  weight= {value === '/booking' ? "fill": "regular"}/>}
+        onClick={() => handleNavigation('/booking')}
+      />
+      { tokenFlag &&
+        <BottomNavigationAction
+       sx={{maxWidth:'none', minWidth:'auto',
+        '& .MuiBottomNavigationAction-label.Mui-selected': {
+          fontSize: '0.8rem',
+          color:'green'
+        },
+        '&.Mui-selected':{
+          backgroundColor: '#e8ffe8',
+          border: '1px solid #7aca7a',
+          margin: '2px',
+          borderRadius: '15px',
+        },
+        '& .MuiBottomNavigationAction-label': {
+          fontSize: '0.7rem',
+        },
+      }}
+        value="/myBooking" label="Bookings"
+        icon={<Clock size={20} color={value === '/myBooking' ? "green" : "gray"}  weight= {value === '/myBooking' ? "fill": "regular"}/>}
+        onClick={() => handleNavigation('/myBooking')}
+      />}
+      <BottomNavigationAction
+      sx={{maxWidth:'none', minWidth:'auto',
+        '& .MuiBottomNavigationAction-label.Mui-selected': {
+          fontSize: '0.8rem',
+          color:'green'
+        },
+        '&.Mui-selected':{
+          backgroundColor: '#e8ffe8',
+          border: '1px solid #7aca7a',
+          margin: '2px',
+          borderRadius: '15px',
+        },
+        '& .MuiBottomNavigationAction-label': {
+          fontSize: '0.7rem',
+        },
+      }}
+      
+        value="/products"
+        label="Products"
+        icon={<ShoppingCartSimple   size={20} color={value === '/products' ? "green" : "gray"}  weight= {value === '/products' ? "fill": "regular"}/>}
+        onClick={() => handleNavigation('/products')}
+      />
+    </BottomNavigation>
+      )
+    :
+    (viewNavigation === 'Trashman') ?
+    (
+    <BottomNavigation
+    showLabels
+    value={value}
+    onChange={(event, newValue) => setValue(newValue)}
+    // sx={{ backgroundImage:
+    //   "radial-gradient(80% 80% at 50% 20%, rgb(204, 242, 218), transparent)", boxShadow: '0 -4px 5px rgba(19, 48, 14, 0.14)' }}
+    style={{ backgroundColor:'#FFF', position: 'fixed', bottom: '-1px', width:'100%', zIndex: 1000, boxShadow: '0 -4px 5px rgba(19, 48, 14, 0.14)' }}
+  >
+    <BottomNavigationAction
+    sx={{maxWidth:'none', minWidth:'auto',
+      '& .MuiBottomNavigationAction-label.Mui-selected': {
+        fontSize: '0.8rem',
+        color:'green'
+      },
+      '&.Mui-selected':{
+        backgroundColor: '#e8ffe8',
+        border: '1px solid #7aca7a',
+        margin: '2px',
+        borderRadius: '15px',
+      },
+      '& .MuiBottomNavigationAction-label': {
+        fontSize: '0.7rem',
+      },
+    }}
+      value="/" label="Pickups"
+      icon={<CalendarDots  size={20} color={value === '/' ? "green" : "gray"}  weight= {value === '/' ? "fill": "regular"}/>}
+      onClick={() => handleNavigation('/')}
+    />
+      <BottomNavigationAction
+     sx={{maxWidth:'none', minWidth:'auto',
+      '& .MuiBottomNavigationAction-label.Mui-selected': {
+        fontSize: '0.8rem',
+        color:'green'
+      },
+      '&.Mui-selected':{
+        backgroundColor: '#e8ffe8',
+        border: '1px solid #7aca7a',
+        margin: '2px',
+        borderRadius: '15px',
+      },
+      '& .MuiBottomNavigationAction-label': {
+        fontSize: '0.7rem',
+      },
+    }}
+      value="/completedBookings" label="Completed"
+      icon={<Clock size={20} color={value === '/completedBookings' ? "green" : "gray"}  weight= {value === '/completedBookings' ? "fill": "regular"}/>}
+      onClick={() => handleNavigation('/completedBookings')}
+    />
+    <BottomNavigationAction
+          sx={{maxWidth:'none', minWidth:'auto',
+            '& .MuiBottomNavigationAction-label.Mui-selected': {
+              fontSize: '0.8rem',
+              color:'green'
+            },
+            '&.Mui-selected':{
+              backgroundColor: '#e8ffe8',
+              border: '1px solid #7aca7a',
+              margin: '2px',
+              borderRadius: '15px',
+            },
+            '& .MuiBottomNavigationAction-label': {
+              fontSize: '0.7rem',
+            },
+          }}
             value="/profile"
-            icon={ <AccountCircleRoundedIcon  style={{fontSize:'20px'}}/>}
+            label="Profile"
+            icon={<Person    size={20} color={value === '/profile' ? "green" : "gray"}  weight= {value === '/profile' ? "fill": "regular"}/>}
             onClick={() => handleNavigation('/profile')}
           />
-        </BottomNavigation>
-      </Paper>
-    </Box>
+  </BottomNavigation>
+    )
+  :
+  (
+  <BottomNavigation
+  showLabels
+  value={value}
+  onChange={(event, newValue) => setValue(newValue)}
+  // sx={{ backgroundImage:
+  //   "radial-gradient(80% 80% at 50% 20%, rgb(204, 242, 218), transparent)", boxShadow: '0 -4px 5px rgba(19, 48, 14, 0.14)' }}
+  style={{backgroundColor:'#FFF', position: 'fixed', bottom: '-1px', width:'100%', zIndex: 1000 , boxShadow: '0 -4px 5px rgba(19, 48, 14, 0.14)'}}
+>
+  <BottomNavigationAction
+  sx={{maxWidth:'none', minWidth:'auto',
+    '& .MuiBottomNavigationAction-label.Mui-selected': {
+      fontSize: '0.8rem',
+      color:'green'
+    },
+    '&.Mui-selected':{
+      backgroundColor: '#e8ffe8',
+      border: '1px solid #7aca7a',
+      margin: '2px',
+      borderRadius: '15px',
+    },
+    '& .MuiBottomNavigationAction-label': {
+      fontSize: '0.7rem',
+    },
+  }}
+    value="/" label="Home"
+    icon={<House  size={20} color={value === '/' ? "green" : "gray"}  weight= {value === '/' ? "fill": "regular"}/>}
+    onClick={() => handleNavigation('/')}
+  />
+  <BottomNavigationAction
+sx={{maxWidth:'none', minWidth:'auto',
+  '& .MuiBottomNavigationAction-label.Mui-selected': {
+    fontSize: '0.8rem',
+    color:'green'
+  },
+  '&.Mui-selected':{
+    backgroundColor: '#e8ffe8',
+    border: '1px solid #7aca7a',
+    margin: '2px',
+    borderRadius: '15px',
+  },
+  '& .MuiBottomNavigationAction-label': {
+    fontSize: '0.7rem',
+  },
+}}
+    value="/booking" label="Schedule"
+    icon={<ClipboardText size={20} color={value === '/booking' ? "green" : "gray"}  weight= {value === '/booking' ? "fill": "regular"}/>}
+    onClick={() => handleNavigation('/booking')}
+  />
+  { tokenFlag &&
+    <BottomNavigationAction
+   sx={{maxWidth:'none', minWidth:'auto',
+    '& .MuiBottomNavigationAction-label.Mui-selected': {
+      fontSize: '0.8rem',
+      color:'green'
+    },
+    '&.Mui-selected':{
+      backgroundColor: '#e8ffe8',
+      border: '1px solid #7aca7a',
+      margin: '2px',
+      borderRadius: '15px',
+    },
+    '& .MuiBottomNavigationAction-label': {
+      fontSize: '0.7rem',
+    },
+  }}
+    value="/myBooking" label="Bookings"
+    icon={<Clock size={20} color={value === '/myBooking' ? "green" : "gray"}  weight= {value === '/myBooking' ? "fill": "regular"}/>}
+    onClick={() => handleNavigation('/myBooking')}
+  />}
+  <BottomNavigationAction
+  sx={{maxWidth:'none', minWidth:'auto',
+    '& .MuiBottomNavigationAction-label.Mui-selected': {
+      fontSize: '0.8rem',
+      color:'green'
+    },
+    '&.Mui-selected':{
+      backgroundColor: '#e8ffe8',
+      border: '1px solid #7aca7a',
+      margin: '2px',
+      borderRadius: '15px',
+    },
+    '& .MuiBottomNavigationAction-label': {
+      fontSize: '0.7rem',
+    },
+  }}
+  disabled
+    value="/products"
+    label="Products"
+    icon={<ShoppingCartSimple   size={20} color={value === '/products' ? "green" : "gray"}  weight= {value === '/products' ? "fill": "regular"}/>}
+    onClick={() => handleNavigation('/products')}
+  />
+</BottomNavigation>
+  )
+    }
+    </>
+        // <BottomNavigation
+        //   showLabels
+        //   value={value}
+        //   onChange={(event, newValue) => setValue(newValue)}
+        //   sx={{ backgroundImage:
+        //     "radial-gradient(80% 80% at 50% 20%, rgb(204, 242, 218), transparent)", boxShadow: '0 -4px 5px rgba(19, 48, 14, 0.14)' }}
+        //   style={{ position: 'fixed', bottom: '-1px', width:'100%', zIndex: 1000 }}
+        // >
+        //   <BottomNavigationAction
+        //   sx={{maxWidth:'none', minWidth:'auto',
+        //     '& .MuiBottomNavigationAction-label.Mui-selected': {
+        //       fontSize: '0.8rem',
+        //       color:'green'
+        //     },
+        //     '& .MuiBottomNavigationAction-label': {
+        //       fontSize: '0.7rem',
+        //     },
+        //   }}
+        //     value="/" label="Home"
+        //     icon={<House  size={20} color={value === '/' ? "green" : "gray"}  weight= {value === '/' ? "fill": "regular"}/>}
+        //     onClick={() => handleNavigation('/')}
+        //   />
+        //   <BottomNavigationAction
+        // sx={{maxWidth:'none', minWidth:'auto',
+        //   '& .MuiBottomNavigationAction-label.Mui-selected': {
+        //     fontSize: '0.8rem',
+        //     color:'green'
+        //   },
+        //   '& .MuiBottomNavigationAction-label': {
+        //     fontSize: '0.7rem',
+        //   },
+        // }}
+        //     value="/booking" label="Schedule"
+        //     icon={<ClipboardText size={20} color={value === '/booking' ? "green" : "gray"}  weight= {value === '/booking' ? "fill": "regular"}/>}
+        //     onClick={() => handleNavigation('/booking')}
+        //   />
+        //   { tokenFlag &&
+        //     <BottomNavigationAction
+        //    sx={{maxWidth:'none', minWidth:'auto',
+        //     '& .MuiBottomNavigationAction-label.Mui-selected': {
+        //       fontSize: '0.8rem',
+        //       color:'green'
+        //     },
+        //     '& .MuiBottomNavigationAction-label': {
+        //       fontSize: '0.7rem',
+        //     },
+        //   }}
+        //     value="/myBooking" label="Bookings"
+        //     icon={<Clock size={20} color={value === '/myBooking' ? "green" : "gray"}  weight= {value === '/myBooking' ? "fill": "regular"}/>}
+        //     onClick={() => handleNavigation('/myBooking')}
+        //   />}
+        //   <BottomNavigationAction
+        //   sx={{maxWidth:'none', minWidth:'auto',
+        //     '& .MuiBottomNavigationAction-label.Mui-selected': {
+        //       fontSize: '0.8rem',
+        //       color:'green'
+        //     },
+        //     '& .MuiBottomNavigationAction-label': {
+        //       fontSize: '0.7rem',
+        //     },
+        //   }}
+        //   disabled
+        //     value="/products"
+        //     label="Products"
+        //     icon={<ShoppingCartSimple   size={20} color={value === '/products' ? "green" : "gray"}  weight= {value === '/products' ? "fill": "regular"}/>}
+        //     onClick={() => handleNavigation('/products')}
+        //   />
+        // </BottomNavigation>
   );
 }

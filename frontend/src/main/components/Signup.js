@@ -1,27 +1,23 @@
-import { Alert, Box, Button, Card, FormControl, FormLabel, Stack, styled, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, Card, Container, FormControl, FormLabel, styled, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import MuiCard from '@mui/material/Card';
 import axios from 'axios';
 import CheckIcon from '@mui/icons-material/Check';
+import logo from './assets/logo.png';
 
 
 const CardStyled = styled(Card)(({ theme }) => ({
-  padding: theme.spacing(4),
+  padding: theme.spacing(2.5),
   gap: theme.spacing(1),
   margin: 'auto',
   boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.1)',
   width: '100%',
+  backgroundColor:'#FFF',
   [theme.breakpoints.up('sm')]: {
     width: '450px',
   },
 }));
-const SignUpContainer = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(2),
-  [theme.breakpoints.up('sm')]: {
-    padding: theme.spacing(4),
-  },
-  }));
+
 const Signup = () => {
     const [emailError, setEmailError] = React.useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
@@ -35,11 +31,11 @@ const Signup = () => {
       name: '',
       email: '',
       mobile: '',
-      password: ''
+      password: '',
   });
     const navigate = useNavigate();
     const [showAlert, setShowAlert] = useState(false);  // State for the success alert
-
+    const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
     const handleChange = (e) => {
       const { name, value } = e.target;
       setFormData({ ...formData, [name]: value });
@@ -64,7 +60,14 @@ const Signup = () => {
         setMobileError(false);
         setMobileErrorMessage('');
       }
-      
+      // if(!formData.role){
+      //   setPasswordError(true);
+      //   setPasswordErrorMessage('Role is not define')
+      // }
+      // else{
+      //   setPasswordError(false);
+      //   setPasswordErrorMessage('');
+      // }
       if (!formData.password || formData.password.length < 6) {
         setPasswordError(true);
         setPasswordErrorMessage('Password must be at least 6 characters long.');
@@ -74,12 +77,12 @@ const Signup = () => {
         setPasswordErrorMessage('');
       }
 
-      if (formData.password.length > 10) {
+      if (formData.mobile.length > 10) {
         setMobileError(true);
         setMobileErrorMessage('Mobile number length should be 10.');
         isValid = false;
       } else {
-        setPasswordError(false);
+        setMobileError(false);
         setMobileErrorMessage('');
       }
   
@@ -94,36 +97,71 @@ const Signup = () => {
   
       if (isValid) {
         try {
-          const response = await axios.post('http://localhost:5000/api/users/register', formData);
+          const response = await axios.post(`${REACT_APP_API_URL}/api/users/register`, formData);
           console.log('Signup successful:', response.data);
           // Trigger success alert and navigate to sign-in
         setShowAlert(true);
         setTimeout(() => {
           setShowAlert(false);
-          navigate('/signin');
+          navigate('/');
         }, 3000); // Alert will be visible for 3 seconds
         } catch (error) {
           console.error('Signup error:', error);
+          console.log(formData)
         }
       }
       
     };
   return (
-    <SignUpContainer direction="column" justifyContent="center">
+  <Box py={12} height={'100vh'} display='flex' flexDirection={'column'} alignItems='center' justifyContent='center'
+  sx={{backgroundImage: "radial-gradient(80% 100% at 50% -20%, rgb(204, 255, 223), transparent)"}}
+  >
+    <Box mb={5} mr={1}>
+          <img src={logo} alt='trash-o-green' width={200}/>
+        </Box>
+        <Typography
+                component="h1"
+                variant="h4"
+                fontFamily={"Merriweather , serif"}
+                sx={{ width: '100%', fontSize: 'clamp(1rem, 5vw, 1. 5rem)', fontWeight:'400'}}
+                textAlign={'center'}
+              >
+                Let's Get Started!
+              </Typography>
+              <Typography
+              mt={0.5}
+                component="h6"
+                variant="body2"
+                sx={{ width: '100%', fontWeight:'300'}}
+                mb={1}
+                fontFamily={"Merriweather , serif"}
+                textAlign={'center'}
+              >
+                Create an account to get started
+              </Typography>
+  <Container  direction="column" justifyContent="center">
         <CardStyled variant="outlined">
           {/* <SitemarkIcon /> */}
-          <Typography
-            component="h1"
-            variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(1rem, 5vw, 1. 5rem)' }}
-          >
-            Sign up
-          </Typography>
+         
           <Box
             component="form"
             onSubmit={handleSubmit}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
+             {/* <FormControl>
+                        <FormLabel htmlFor="role">Role</FormLabel>
+                        <Select
+                            required
+                            fullWidth
+                            id="role"
+                            name="role"
+                            value={formData.role}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="user">User</MenuItem>
+                            <MenuItem value="admin">Admin</MenuItem>
+                        </Select>
+                    </FormControl> */}
             <FormControl>
               <FormLabel htmlFor="name">Full name</FormLabel>
               <TextField
@@ -214,7 +252,6 @@ const Signup = () => {
               type="submit"
               fullWidth
               variant="contained"
-              className='buttons'
               // onClick={validateInputs}
               // sx={{ minWidth: 'fit-content',fontFamily:'"Inria Sans", serif',color:'#F2F7F2', borderRadius:'10px', backgroundColor:'#3a5a40',  backgroundImage:'none', border:'none', boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px' }}
             >
@@ -234,10 +271,11 @@ const Signup = () => {
         </CardStyled>
         {showAlert && (
         <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
-          Signup successful! Redirecting to sign-in page...
+          Signup successful !!
         </Alert>
       )}
-      </SignUpContainer>
+      </Container>
+  </Box>
   )
 }
 

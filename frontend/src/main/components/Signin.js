@@ -1,14 +1,17 @@
-import { Alert, Box, Button, Card, FormControl, FormLabel, Snackbar, Stack, styled, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, Card, Container, FormControl, FormLabel, Snackbar, Stack, styled, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import MuiCard from '@mui/material/Card';
 import { useAuth } from '../../context/AuthContext'; // Import useAuth hook
 import axios from 'axios';
+import logo from './assets/logo.png';
+import { useUser } from '../../context/UserContext';
+import { jwtDecode } from 'jwt-decode';
 
 const CardStyled = styled(Card)(({ theme }) => ({
-  padding: theme.spacing(4),
+  padding: theme.spacing(2.5),
   gap: theme.spacing(1),
   margin: 'auto',
+  backgroundColor:'#FFF',
   boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.1)',
   width: '100%',
   [theme.breakpoints.up('sm')]: {
@@ -16,21 +19,18 @@ const CardStyled = styled(Card)(({ theme }) => ({
   },
 }));
 
-const SignInContainer = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(2),
-  [theme.breakpoints.up('sm')]: {
-    padding: theme.spacing(4),
-  },
-  }));
+
 const Signin = () => {
-      const [emailError, setEmailError] = React.useState(false);
-      const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
+  const [mobileError, setMobileError] = React.useState(false);
+  const [mobileErrorMessage, setMobileErrorMessage] = React.useState('');
       const [passwordError, setPasswordError] = React.useState(false);
       const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
       const [open, setOpen] = React.useState(false);
       const [formData, setFormData] = useState({ email: '', password: '' });
-      const { setToken } = useAuth(); // Access setToken from AuthContext
+      const {token, setToken } = useAuth(); // Access setToken from AuthContext
       const navigate = useNavigate();
+      const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
+      const { user, setUser } = useUser();
 
       const handleChange = (e) => {
         const { name, value } = e.target;
@@ -40,15 +40,6 @@ const Signin = () => {
           e.preventDefault();
           
           let isValid = true; 
-        if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
-          setEmailError(true);
-          setEmailErrorMessage('Please enter a valid email address.');
-          isValid = false;
-        } else {
-          setEmailError(false);
-          setEmailErrorMessage('');
-        }
-    
         if (!formData.password || formData.password.length < 6) {
           setPasswordError(true);
           setPasswordErrorMessage('Password must be at least 6 characters long.');
@@ -59,47 +50,82 @@ const Signin = () => {
         }
         if (isValid) {
           try {
-            const response = await axios.post('http://localhost:5000/api/users/login', formData);
-            // localStorage.setItem('token', response.data.token);
+            const response = await axios.post(`${REACT_APP_API_URL}/api/users/login`, formData);
             if (response.status === 200) {
+              sessionStorage.setItem('token', response.data.token);
               setToken(response.data.token); // Save token globally using context
+              // Decode the token and set user data in UserContext
+              const decodedUserData = jwtDecode(response.data.token); // Decode the JWT token
+              setUser(decodedUserData); // Save user data in UserContext
               console.log('Login successful', response.data);
               setOpen(true);
-              setTimeout(() => {
-                navigate('/')
-              }, 500000000);
+              const redirectStep = sessionStorage.getItem('RedirectStep');
+              if (redirectStep) {
+                navigate(`/booking?step=${redirectStep}`);
+                sessionStorage.removeItem('RedirectStep'); // Clear after redirect
+              } else {
+                navigate('/'); // Default redirection
+              }
+           
             }
         } catch (error) {
           console.error('Login error:', error);
           // Show error message based on the response from the server
           if (error.response) {
-            if(error.response.data.message === 'User not found. Please check your registered email.'){
-              setEmailError(true); // You could show specific messages for email/password errors
-              setEmailErrorMessage(error.response.data.message); 
+            if(error.response.data.message === 'User not found. Please check your registered mobile number.'){
+              setMobileError(true); // You could show specific messages for email/password errors
+              setMobileErrorMessage(error.response.data.message); 
             }
             else{
               setPasswordError(true); // You could show specific messages for email/password errors
               setPasswordErrorMessage(error.response.data.message); 
             }
           } else {
-              setEmailError(true);
-              setEmailErrorMessage('An unexpected error occurred. Please try again.');
+              setMobileError(true);
+              setMobileErrorMessage('An unexpected error occurred. Please try again.');
           }         
          }
         }
           
       };
-     
+       
+      
+
   return (
-    <SignInContainer  direction="column" justifyContent="center">
-    <CardStyled variant="outlined">
+    <Box py={12} height={'100vh'} display='flex' flexDirection={'column'} alignItems='center' justifyContent='center'
+    sx={{backgroundImage: "radial-gradient(80% 100% at 50% -20%, rgb(204, 255, 223), transparent)"}}>
+    <Box mb={5} mr={1}>
+      <img src={logo} alt='trash-o-green' width={200}/>
+    </Box>
+    <Typography
+        component="h1"
+        variant="h4"
+        fontFamily={"Merriweather , serif"}
+        sx={{ width: '100%', fontSize: 'clamp(1rem, 5vw, 1. 5rem)' , fontWeight:'400'}}
+        textAlign={'center'}
+      >
+        Welcome Back!
+      </Typography>
       <Typography
+      mt={0.5}
+        component="h6"
+        variant="body2"
+        fontFamily={"Merriweather , serif"}
+        sx={{ width: '100%', fontWeight:'300'}}
+        mb={1}
+        textAlign={'center'}
+      >
+        Sign in to your account to continue
+      </Typography>
+    <Container direction="column" justifyContent="center">
+    <CardStyled variant="outlined">
+      {/* <Typography
         component="h1"
         variant="h4"
         sx={{ width: '100%', fontSize: 'clamp(1rem, 5vw, 1. 5rem)' }}
       >
         Sign in
-      </Typography>
+      </Typography> */}
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -112,23 +138,42 @@ const Signin = () => {
         }}
       >
         <FormControl>
-          <FormLabel htmlFor="email">Email</FormLabel>
-          <TextField
-            error={emailError}
-            helperText={emailErrorMessage}
-            id="email"
-            type="email"
-            name="email"
-            placeholder="your@email.com"
-            autoComplete="email"
-            autoFocus
-            required
-            fullWidth
-            variant="outlined"
-            color={emailError ? 'error' : 'primary'}
-            value={formData.email} onChange={handleChange}
-          />
-        </FormControl>
+              <FormLabel htmlFor="mobile">Mobile No.</FormLabel>
+              <TextField
+                required
+                fullWidth
+                id="mobile"
+                placeholder="0123456789"
+                name="mobile"
+                autoComplete="mobile"
+                variant="outlined"
+                error={mobileError}
+                helperText={mobileErrorMessage}
+                color={mobileError ? 'error' : 'primary'}
+                value={formData.mobile}
+                onChange={(e) => {
+                  let value = e.target.value;
+            
+                  // Remove any non-numeric characters
+                  value = value.replace(/[^0-9]/g, '');
+            
+                  // Update mobile number state
+                  setFormData({ ...formData, mobile: value });
+            
+                  // Validate the mobile number on input change
+                  if (value.length !== 10 || isNaN(value)) {
+                    setMobileError(true);
+                    setMobileErrorMessage('Mobile number must be exactly 10 digits long and contain only numbers.');
+                  } else if (!/^[7-9]\d{9}$/.test(value)) {
+                    setMobileError(true);
+                    setMobileErrorMessage('Mobile number must start with 7, 8, or 9.');
+                  } else {
+                    setMobileError(false);
+                    setMobileErrorMessage('');
+                  }
+                }}
+              />
+            </FormControl>
         <FormControl>
           <FormLabel htmlFor="password">Password</FormLabel>
           <TextField
@@ -139,7 +184,6 @@ const Signin = () => {
             type="password"
             id="password"
             autoComplete="current-password"
-            autoFocus
             required
             fullWidth
             variant="outlined"
@@ -156,8 +200,6 @@ const Signin = () => {
           type="submit"
           fullWidth
           variant="contained"
-          sx={{ minWidth: 'fit-content',fontFamily:'"Inria Sans", serif',color:'#F2F7F2', borderRadius:'10px', backgroundColor:'#3a5a40',  backgroundImage:'none', border:'none', boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px' }}
-
         >
           Sign in
         </Button>
@@ -197,7 +239,8 @@ const Signin = () => {
           Logged in successfully!
         </Alert>
       </Snackbar>
-  </SignInContainer>
+  </Container>
+    </Box>
   )
 }
 

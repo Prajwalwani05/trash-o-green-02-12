@@ -1,9 +1,21 @@
-import { Box, Container, Stack, Typography } from '@mui/material'
+import { Box, Card, Container, Stack, styled, Typography } from '@mui/material'
 import React from 'react'
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import CallRoundedIcon from '@mui/icons-material/CallRounded';
 import puneCity from './assets/punecity1.png';
+
+const CardStyled = styled(Card)(({ theme }) => ({
+  padding: theme.spacing(2.5),
+  gap: theme.spacing(1),
+  margin: 'auto',
+  boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.1)',
+  width: '100%',
+  backgroundColor:'#E9F5E9',
+  [theme.breakpoints.up('sm')]: {
+    width: '450px',
+  },
+}));
 
 const Contact = () => {
   return (
@@ -12,7 +24,7 @@ const Contact = () => {
       sx={(theme) => ({
         width: '100%',
         backgroundRepeat: 'no-repeat',
-      
+       backgroundImage: "radial-gradient(80% 100% at 50% -20%, rgb(204, 255, 223), transparent)"
       })}
     >
       <Container
@@ -20,7 +32,7 @@ const Contact = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          pt: { xs: 8, sm: 18 },
+          pt: { xs: 14, sm: 18 },
           pb: { xs: 8, sm: 5 },
         }}
       > 

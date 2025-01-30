@@ -1,6 +1,6 @@
 // models/booking.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../db/dbConnection');
+const {sequelize} = require('../db/dbConnection');
 const moment = require('moment-timezone');
 
 const Booking = sequelize.define('Booking', {
@@ -32,13 +32,39 @@ const Booking = sequelize.define('Booking', {
     type: DataTypes.JSON,
     allowNull: true
   },
-  status: {
-    type: DataTypes.ENUM('pending', 'completed', 'canceled'),  // Predefined list of statuses
-    allowNull: false,
-    defaultValue: 'pending',  // Default status is "pending"
+  calculatedWeight: {
+    type: DataTypes.JSON,
+    allowNull: true
   },
-
-
+  paymentStatus: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue:'Not Paid'
+  },  
+  // amount: {
+  //   type: DataTypes.INTEGER,
+  //   allowNull: false
+  // },
+  assignedTrashman: {
+    type: DataTypes.STRING,
+    defaultValue:'Not Assigned',
+    allowNull: true
+  },
+  trashmanId: {
+    type: DataTypes.STRING,
+    defaultValue:'Not Assigned',
+    allowNull: true
+  },
+  pickUpDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  status: {
+    type: DataTypes.ENUM('Approval Pending', 'InProgress', 'Completed', 'Cancelled'),  // Predefined list of statuses
+    allowNull: false,
+    defaultValue: 'Approval Pending',  // Default status is "pending"
+  },
+  
 
 }, {
   tableName: 'bookings', // table name

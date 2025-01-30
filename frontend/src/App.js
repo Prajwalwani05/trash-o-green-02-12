@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import LocationShare from './pages/locationShare';
 import ErrorPage from './pages/errorPage';
-import RequestForm from './pages/requestForm';
 import AppTheme from './shared-theme/AppTheme';
 import AppAppBar from './main/components/AppAppBar';
 import FixedBottomNavigation from './main/components/BottomNavigation';
@@ -18,6 +17,14 @@ import Booking from './main/components/Booking';
 import UserBookings from './main/components/UserBookings';
 import Contact from './main/components/Contact';
 import TokenHandler from './main/components/TokenHandler';
+import { CssBaseline, useMediaQuery } from '@mui/material';
+import Products from './main/components/Products';
+import Bag from './main/components/Products/Bag';
+import CoinsPage from './main/components/CoinsPage';
+import Orders from './main/components/Products/orders';
+import ProceedPickup from './main/components/TrashMan/proceedPickup';
+// import ProcedureResults from './mskvy/ClusterBase_LOA_Details';
+// import { AdminRouteWrapper } from './main/components/Admin/RouteAdmin';
 
 // Splash Screen Component
 function SplashScreen() {
@@ -30,12 +37,15 @@ function SplashScreen() {
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
+  //const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
+  const isMobileView = useMediaQuery('(max-width:600px)');
 
   // Use a timer to hide the splash screen after 5 seconds
   useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 1300); // 5 seconds
+    const timer = setTimeout(() => setShowSplash(false), 500); // 5 seconds
     return () => clearTimeout(timer); // Cleanup timer on unmount
   }, []);
+  
 
   if (showSplash) {
     return <SplashScreen />;
@@ -43,10 +53,10 @@ function App() {
 
   return (
     <div className="App">
-      <AppTheme>
+      <AppTheme >
+      <CssBaseline enableColorScheme />
         <AppAppBar />
-        <div className="main-content">
-          <div className='pageOverlay'>
+        <div>
           <TokenHandler />
           <Routes>
             <Route exact path="/" element={<Hero />} />
@@ -57,14 +67,28 @@ function App() {
             <Route path="/signin" element={<Signin />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/locationShare" element={<LocationShare />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/bag" element={<Bag />} />
+            <Route path="/orders" element={<Orders />} />
+            
             {/* <Route path="/requestForm" element={<RequestForm />} /> */}
             <Route path="/booking" element={<Booking />} />
             <Route path="/myBooking" element={<UserBookings />} />
+           {/* For only Admin */}
+           {/* <Route path="/admin" element={<Admin />} /> */}
+           <Route path='mycoins' element={<CoinsPage />}/>
             <Route path="*" element={<ErrorPage />} />
+
+            <Route path='/proceedPickup' element={<ProceedPickup />}/>
+            
+            
+            {/* <Route path='/clusterLoa' element={<ProcedureResults />}/> */}
+
           </Routes>
           </div>
-        </div>
-        <FixedBottomNavigation />
+          {isMobileView && (
+            <FixedBottomNavigation />
+          )}
       </AppTheme>
     </div>
   );

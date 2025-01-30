@@ -1,53 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ephesis&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Limelight?family=DM+Serif+Text:ital@0;1&family=Original+Surfer&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
 *{
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  box-sizing: border-box; 
 }
-.App {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+.pickupList::-webkit-scrollbar{
+  width: 4px;
 }
-
-.main-content {
-  flex-grow: 1; /* Take remaining space between AppBar and BottomNavigation */
-  overflow-y: scroll; /* Allow vertical scrolling */
-  /* padding-top: 20px; */
-  /* background-image: url('./main//components//assets/josh.jpg');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover; */
-  background-color: #FFFFFF;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 68px;
-  /* opacity: 0.5; */
-}
-.pageOverlay{
-  width: 100%;
-  height: 100%;
-  /* background-color: #d2f6d584; */
-  /* color: rgba(255, 255, 255, 0.748); */
-}
-
-.AppAppBar {
-  position: fixed; /* Keep app bar fixed at the top */
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000; /* Make sure it's on top of other content */
-}
-
-.FixedBottomNavigation {
-  position: fixed; /* Keep bottom navigation fixed at the bottom */
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000; /* Ensure it's above content */
+.pickupList::-webkit-scrollbar-thumb{
+  background-color:rgba(84, 84, 84, 0.404);
+  border-radius: 10px;
 }
 #splash-screen{
   -webkit-animation: blur-out-expand 2s cubic-bezier(0.250, 0.460, 0.450, 0.940) 500ms both;
@@ -75,10 +45,6 @@
             filter: blur(12px) opacity(0%);
   }
 }
-
-
-
-
 swiper-container {
   width: 800px;
   height: 400px;
@@ -95,10 +61,148 @@ swiper-slide img {
   height: 100%;
   object-fit: cover;
 }
-.buttons{
-  background-image: linear-gradient(to bottom, hsl(102.46deg 30.56% 35.46%), hsl(220, 30%, 6%)) !important;
-  box-shadow: inset 0 1px 0 hsl(117.97deg 20% 35%), inset 0 -1px 0 1px hsla(0, 0%, 18%, 0.703) !important;
-  border: 1px solid hsl(120.18deg 33.56% 28.3%) !important;
-  background-color: #76B664 !important;
-  /* border-radius: 10px !; */
+
+::-webkit-scrollbar{
+  width: 5px;
 }
+
+.adminTable{
+  border: 1px solid #95d5b2;
+  width: 100%;
+}
+
+.bookingCardCss{
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: gray;
+}
+.custom-delay-1-8s{
+  animation-delay: 1.8s;
+}
+.custom-delay-2-4s {
+  animation-delay: 2.2s;
+}
+
+.custom-delay-2-8s {
+  animation-delay: 2.6s;
+}
+
+
+.handWave{
+  animation: myAnim 5s ease 0s 10000 normal forwards;
+  filter: brightness(1) contrast(5);
+  filter: drop-shadow(10px 5px 3px #563c1f4d);
+}
+@keyframes myAnim {
+	0%,
+	100% {
+		transform: rotate(0deg);
+		transform-origin: 50% 50%;
+	}
+
+	10% {
+		transform: rotate(8deg);
+	}
+
+	20%,
+	40%,
+	60% {
+		transform: rotate(-10deg);
+	}
+
+	30%,
+	50%,
+	70% {
+		transform: rotate(10deg);
+	}
+
+	80% {
+		transform: rotate(-8deg);
+	}
+
+	90% {
+		transform: rotate(8deg);
+	}
+}
+/* .heroBg{
+  position: relative;
+  background-color: transperant;
+  width: 100%;
+  max-height: 100%;
+	&:after {
+    position: absolute;
+    content: '';
+    top: -50px;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    margin: 0 auto;
+    filter: blur(80px);
+		transform: scale(1);
+    background-image: linear-gradient(
+      80deg,
+      hsl(119deg 100% 63%) 0%,   
+      hsl(114deg 100% 65%) 24%,  
+      hsl(110deg 100% 66%) 20%,
+      hsl(105deg 99% 68%) 47%,   
+      hsl(101deg 99% 70%) 55%,   
+      hsl(96deg 99% 71%) 61%,   
+      hsl(91deg 98% 73%) 66%, 
+      hsl(87deg 98% 75%) 70%,   
+      hsl(82deg 97% 76%) 100%,
+      hsl(77deg 97% 78%) 78%, 
+      hsl(73deg 96% 80%) 82%,   
+      hsl(68deg 95% 81%) 86%,  
+      hsl(64deg 94% 83%) 89%,    
+      hsl(59deg 93% 85%) 94%,   
+      hsl(54deg 91% 86%) 100% 
+    );
+    
+    background-size: 200% 200%;
+    animation: animateGlow 10s ease infinite;
+    
+    @keyframes animateGlow {
+      0%  {
+				background-position: 0% 50%
+			}
+      
+			50% {
+				background-position: 100% 50%
+			}
+			
+      100% {
+				background-position: 0% 50%
+			}
+    }
+  }
+} */
+
+.carousel{
+  width: 100%;
+  height: 316px; 
+  background-color: #FFF; 
+  }
+
+  .carousel .carouselInside{
+    background: transparent;
+    background: -moz-linear-gradient(0deg, rgba(0,0,0,0.9024859943977591) 11%, rgba(255,255,255,0) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(0,0,0,0.9024859943977591) 11%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.873) 11%, rgba(255, 255, 255, 0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#ffffff",GradientType=1);    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 34px 25px;
+    & h2{
+      font-size: 20px;
+    }
+    & p{
+      font-size: 14px;
+    }
+  }

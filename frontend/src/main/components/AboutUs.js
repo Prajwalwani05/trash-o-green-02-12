@@ -8,7 +8,7 @@ const AboutUs = () => {
       sx={(theme) => ({
         width: '100%',
         backgroundRepeat: 'no-repeat',
-      
+      backgroundImage: "radial-gradient(80% 100% at 50% -20%, rgb(204, 255, 223), transparent)"
       })}
     >
       <Container
@@ -16,8 +16,8 @@ const AboutUs = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          pt: { xs: 2, sm: 18 },
-          pb: { xs: 8, sm: 5 },
+          pt: { xs: 14, sm: 5 },
+          pb: { xs: 10, sm: 12 },
         }}
       > 
         <Stack
@@ -44,7 +44,7 @@ const AboutUs = () => {
           <Typography
             variant="caption"
             color="text.secondary"
-            sx={{ textAlign: 'center', fontSize:'15px' , fontFamily: "Charm, cursive"}}
+            sx={{ textAlign: 'center', fontSize:'15px' }}
           >
             We at Trash-O-Green, Pune's first and only   online trash collection company are committed to provide doorstep and time convenient service to our customers. We recycle trash and aim Zero Waste Initiative. It is Green Movement initiated by engineers as a responsibility to towards Society and towards a Planet. We are aiming towards sustainable living & zero carbon footprint.
 

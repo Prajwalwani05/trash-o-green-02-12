@@ -1,43 +1,40 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode';
+import { useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode'; // Correct import without curly braces
 
 const TokenHandler = () => {
-  const navigate = useNavigate();
-
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/signin'); // Redirect if no token
-      return;
-    }
+    const token = sessionStorage.getItem('token');
 
-    // Decode the token to get the expiration time
-    try {
-      const decoded = jwtDecode(token);
-      const currentTime = Date.now() / 1000; // Convert to seconds
-      const timeUntilExpiry = decoded.exp - currentTime;
+    // Check if the token exists and is a string
+    if (token && typeof token === 'string') {
+      try {
+        // Decode the token to check the expiration time
+        const decoded = jwtDecode(token);
+        const currentTime = Date.now() / 1000; // Convert to seconds
+        const timeUntilExpiry = decoded.exp - currentTime;
 
-      if (timeUntilExpiry <= 0) {
-        // Token already expired
-        localStorage.removeItem('token');
-        navigate('/signin');
-      } else {
-        // Set a timeout to redirect just before the token expires
-        const timer = setTimeout(() => {
-          localStorage.removeItem('token');
-          navigate('/signin');
-        }, timeUntilExpiry * 1000); // Convert to milliseconds
+        // Check if the token is expired
+        if (timeUntilExpiry <= 0) {
+          // Token has already expired, remove it from sessionStorage
+          sessionStorage.removeItem('token');
+        } else {
+          // Set a timeout to remove the token when it expires
+          const timer = setTimeout(() => {
+            sessionStorage.removeItem('token');
+          }, timeUntilExpiry * 1000); // Convert to milliseconds
 
-        // Clean up timeout on unmount
-        return () => clearTimeout(timer);
+          // Clean up timeout on unmount or when token changes
+          return () => clearTimeout(timer);
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        // Remove invalid token if decoding fails
+        sessionStorage.removeItem('token');
       }
-    } catch (error) {
-      console.error("Error decoding token:", error);
-      localStorage.removeItem('token'); // Remove invalid token
-      navigate('/signin');
+    } else {
+      console.error("Token is missing or invalid");
     }
-  }, [navigate]);
+  }, []); // Empty dependency array ensures this effect runs only once when component mounts
 
   return null; // This component doesn't render anything
 };
