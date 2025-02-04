@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { UserProvider } from './context/UserContext';
+import { BookingProvider } from './context/BookingContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -14,7 +15,9 @@ root.render(
     <UserProvider>
   <AuthProvider>
    <CartProvider>
+   <BookingProvider>
     <App />
+   </BookingProvider>
    </CartProvider>
   </AuthProvider>
     </UserProvider>

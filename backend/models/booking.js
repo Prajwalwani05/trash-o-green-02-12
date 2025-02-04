@@ -34,7 +34,8 @@ const Booking = sequelize.define('Booking', {
   },
   calculatedWeight: {
     type: DataTypes.JSON,
-    allowNull: true
+    allowNull: true,
+    defaultValue: ''
   },
   paymentStatus: {
     type: DataTypes.STRING,

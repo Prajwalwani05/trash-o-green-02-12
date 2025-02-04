@@ -121,7 +121,7 @@ import * as React from 'react';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CalendarDots, ClipboardText, Clock, House, Person, ShoppingCartSimple} from "@phosphor-icons/react";
+import { Alarm, CalendarDots, ClipboardText, Clock, House, Person, ShoppingCartSimple} from "@phosphor-icons/react";
 import { useUser } from '../../context/UserContext';
 
 export default function FixedBottomNavigation() {
@@ -164,7 +164,7 @@ export default function FixedBottomNavigation() {
       onChange={(event, newValue) => setValue(newValue)}
       // sx={{ backgroundImage:
       //   "radial-gradient(80% 80% at 50% 20%, rgba(253, 255, 254, 0.24), transparent)", boxShadow: '0 -4px 5px rgba(19, 48, 14, 0.14)' }}
-      style={{height:'62px', padding:'5px', backgroundColor:'rgb(255, 255, 255)', position: 'fixed', bottom: '-1px', width:'100%', zIndex: 1000, boxShadow: '0 -4px 5px rgba(19, 48, 14, 0.14)' }}
+      style={{height:'62px', padding:'5px', backgroundColor:'rgb(255, 255, 255)', position: 'fixed', bottom: '-2px', width:'100%', zIndex: 1000, boxShadow: '0 -4px 5px rgba(19, 48, 14, 0.14)' }}
     >
       <BottomNavigationAction
       sx={{maxWidth:'none', minWidth:'auto',
@@ -279,10 +279,31 @@ export default function FixedBottomNavigation() {
         fontSize: '0.7rem',
       },
     }}
-      value="/" label="Pickups"
+      value="/" label="Confirm Pickups"
       icon={<CalendarDots  size={20} color={value === '/' ? "green" : "gray"}  weight= {value === '/' ? "fill": "regular"}/>}
       onClick={() => handleNavigation('/')}
     />
+     <BottomNavigationAction
+          sx={{maxWidth:'none', minWidth:'auto',
+            '& .MuiBottomNavigationAction-label.Mui-selected': {
+              fontSize: '0.8rem',
+              color:'green'
+            },
+            '&.Mui-selected':{
+              backgroundColor: '#e8ffe8',
+              border: '1px solid #7aca7a',
+              margin: '2px',
+              borderRadius: '15px',
+            },
+            '& .MuiBottomNavigationAction-label': {
+              fontSize: '0.7rem',
+            },
+          }}
+            value="/scheduledPickups"
+            label="PickUps"
+            icon={<Alarm size={20} color={value === '/scheduledPickups' ? "green" : "gray"}  weight= {value === '/scheduledPickups' ? "fill": "regular"}/>}
+            onClick={() => handleNavigation('/scheduledPickups')}
+          />
       <BottomNavigationAction
      sx={{maxWidth:'none', minWidth:'auto',
       '& .MuiBottomNavigationAction-label.Mui-selected': {
@@ -303,27 +324,7 @@ export default function FixedBottomNavigation() {
       icon={<Clock size={20} color={value === '/completedBookings' ? "green" : "gray"}  weight= {value === '/completedBookings' ? "fill": "regular"}/>}
       onClick={() => handleNavigation('/completedBookings')}
     />
-    <BottomNavigationAction
-          sx={{maxWidth:'none', minWidth:'auto',
-            '& .MuiBottomNavigationAction-label.Mui-selected': {
-              fontSize: '0.8rem',
-              color:'green'
-            },
-            '&.Mui-selected':{
-              backgroundColor: '#e8ffe8',
-              border: '1px solid #7aca7a',
-              margin: '2px',
-              borderRadius: '15px',
-            },
-            '& .MuiBottomNavigationAction-label': {
-              fontSize: '0.7rem',
-            },
-          }}
-            value="/profile"
-            label="Profile"
-            icon={<Person    size={20} color={value === '/profile' ? "green" : "gray"}  weight= {value === '/profile' ? "fill": "regular"}/>}
-            onClick={() => handleNavigation('/profile')}
-          />
+   
   </BottomNavigation>
     )
   :

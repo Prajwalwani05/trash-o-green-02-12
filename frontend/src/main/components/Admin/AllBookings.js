@@ -163,9 +163,11 @@ const AllBookings = () => {
       { Header: "Area", accessor: "area" },
       { Header: "Address", accessor: "address" },
       { Header: "Trash Type", accessor: "trashtype" },
+      { Header: "Calculated Weight", accessor: "calculatedWeight" },
       { Header: "Assigned Trashman", accessor: "assignedTrashman" },
       { Header: "Trashman Id", accessor: "trashmanId" },
       { Header: "Pick Up Date", accessor: "pickUpDate" },
+      { Header: "Payment Status", accessor: "paymentStatus" },
       { Header: "Status", accessor: "status" },
       { Header: "Booked On", accessor: "createdAt" },
       {
@@ -252,8 +254,8 @@ const AllBookings = () => {
 
   return (
     <Box
-      mt={9}
       p={2}
+      pt={12}
       style={{ height: "100%", width: "100%", overflowX: "auto" }}
     >
       <Typography style={{ textAlign: "center" }} mb={2} variant="h5">
@@ -342,7 +344,31 @@ const AllBookings = () => {
                             ) : (
                               cell.render("Cell")
                             )
-                          ) : cell.column.id === "pickUpDate" ? (
+                          ) 
+                          :
+                          cell.column.id === "paymentStatus" ? (
+                            isEditable ? (
+                              <Select
+                                value={editedBooking.paymentStatus || ''}
+                                onChange={(e) =>
+                                  setEditedBooking({
+                                    ...editedBooking,
+                                    paymentStatus: e.target.value,
+                                  })
+                                }
+                              >
+                                <MenuItem value="Paid">
+                                  Paid
+                                </MenuItem>
+                                <MenuItem value="Not Paid">
+                                  Not Paid
+                                </MenuItem>
+                              </Select>
+                            ) : (
+                              cell.render("Cell")
+                            )
+                          )
+                          : cell.column.id === "pickUpDate" ? (
                             isEditable ? (
                               <TextField
                                 type="date"

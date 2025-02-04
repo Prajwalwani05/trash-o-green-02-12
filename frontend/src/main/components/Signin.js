@@ -210,7 +210,7 @@ const Signin = () => {
           // variant="body2"
           sx={{ alignSelf: 'center' }}
           style={{fontSize:'12px'}}
-          to={'#'}
+          to={'/forgotPassword'}
         >
           Forgot your password?
         </Link>

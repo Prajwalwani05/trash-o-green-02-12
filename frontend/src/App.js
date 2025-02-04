@@ -23,6 +23,10 @@ import Bag from './main/components/Products/Bag';
 import CoinsPage from './main/components/CoinsPage';
 import Orders from './main/components/Products/orders';
 import ProceedPickup from './main/components/TrashMan/proceedPickup';
+import ForgotPassword from './main/components/ForgotPassword';
+import ResetPassword from './main/components/ResetPassword';
+import ScheduledPickups from './main/components/TrashMan/scheduledPickups';
+import Completed from './main/components/TrashMan/Completed';
 // import ProcedureResults from './mskvy/ClusterBase_LOA_Details';
 // import { AdminRouteWrapper } from './main/components/Admin/RouteAdmin';
 
@@ -37,16 +41,12 @@ function SplashScreen() {
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
-  //const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
   const isMobileView = useMediaQuery('(max-width:600px)');
-
   // Use a timer to hide the splash screen after 5 seconds
   useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 500); // 5 seconds
+    const timer = setTimeout(() => setShowSplash(false), 300);
     return () => clearTimeout(timer); // Cleanup timer on unmount
   }, []);
-  
-
   if (showSplash) {
     return <SplashScreen />;
   }
@@ -66,6 +66,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/signin" element={<Signin />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/forgotPassword" element={<ForgotPassword />} />
+            <Route path="/resetPassword" element={<ResetPassword />} />
             <Route path="/locationShare" element={<LocationShare />} />
             <Route path="/products" element={<Products />} />
             <Route path="/products/bag" element={<Bag />} />
@@ -80,7 +82,8 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
 
             <Route path='/proceedPickup' element={<ProceedPickup />}/>
-            
+            <Route path='/scheduledPickups' element={<ScheduledPickups />}/>
+            <Route path='/completedBookings' element={<Completed />}/>
             
             {/* <Route path='/clusterLoa' element={<ProcedureResults />}/> */}
 

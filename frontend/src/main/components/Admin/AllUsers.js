@@ -259,7 +259,7 @@ const AllUsers = () => {
   
   return (
     <Box mt={0} p={2} style={{ height: '100%', width: '100%'}}>
-      <Typography style={{textAlign:'center'}} mb={2} variant="h5">All Users</Typography>
+      <Typography style={{textAlign:'center'}} mb={0} variant="h5">All Users</Typography>
       <Button startIcon={<AddCircleIcon />} variant="text" color="secondary" onClick={() => setOpenAddDialog(true)}>
         Add User
       </Button>

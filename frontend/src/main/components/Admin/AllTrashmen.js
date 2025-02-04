@@ -379,7 +379,7 @@ import {
 import PdfViewer from "./pdfViewer";
 import { Eye, Link } from "@phosphor-icons/react";
 
-const AllTrashman = () => {
+const AllTrashman = ({}) => {
   const [allTrashman, setAllTrashman] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -537,7 +537,7 @@ const AllTrashman = () => {
           );
         },
       },
-      { Header: "Booked On", accessor: "createdAt" },
+      // { Header: "Booked On", accessor: "createdAt" },
       {
         Header: "Actions",
         Cell: ({ row }) => {
@@ -622,7 +622,7 @@ const AllTrashman = () => {
 
   return (
     <Box
-      mt={9}
+      mt={2}
       p={2}
       style={{ height: "100%", width: "100%", overflowX: "auto" }}
     >

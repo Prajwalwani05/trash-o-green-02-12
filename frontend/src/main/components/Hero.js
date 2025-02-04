@@ -4,10 +4,9 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { Avatar, Card, CircularProgress, Divider, Paper, styled, Tab, Tabs } from "@mui/material";
+import { Avatar, CircularProgress, Divider, } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import FAQ from "./FAQ";
-import { jwtDecode } from "jwt-decode";
 import Admin from "./Admin";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -29,14 +28,12 @@ import {
   HandCoins,
   Leaf,
   Magnet,
-  Moon,
   Newspaper,
   Plug,
   PuzzlePiece,
   Receipt,
   Scales,
   ShieldCheck,
-  SignIn,
   SprayBottle,
   Sun,
   SunHorizon,
@@ -50,14 +47,8 @@ import {
   CloudFog,
   IceCream,
 } from "@phosphor-icons/react/dist/ssr";
-import pickupImg from "./assets/file3.png";
-import paymentImg from "./assets/file1.png";
-import videoSrc from "./assets/tog3.mp4";
 import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
 import TrashMan from "./TrashMan";
-// import product1 from './assets/diana-light-3-6mITmMyGI-unsplash.jpg';
-// import product2 from './assets/characterBooking.png';
-// import product3 from './assets/characterPayment1.png';
 import Example from "./CarousalHome";
 import character from './assets/character.png';
 import characterBooking from './assets/characterBooking.png';
@@ -65,6 +56,7 @@ import characterPayment from './assets/characterPayment1.png';
 import CarousalProducts from "./carousal";
 import axios from "axios";
 import AnimatedBell from "./AnimatedBell";
+import { BookingContext } from "../../context/BookingContext";
 
 
 const items = [
@@ -82,19 +74,9 @@ const items = [
       name: "Receive payment",
       description: "Mental Health in the Digital Age: Navigating Social Media and Well-being",
       img: characterPayment,
-  }
+  } 
 ];
-// const products = [
-//   {
-//       img: characterBooking,
-//   },
-//   {
-//       img: character,
-//   },
-//   {
-//       img: characterPayment,
-//   }
-// ];
+
 const categories = [
   {
     label: "E-waste",
@@ -162,22 +144,25 @@ const categories = [
   },
 ];
 export default function Hero() {
-  const [adminFlag, setAdminFlag] = React.useState('user');
-  const [userNameToShow, setUserNameToShow] = React.useState("");
-  const [tokenFlag, setTokenflag] = React.useState(false);
-  const navigate = useNavigate();
-  const { user , notification} = useUser();
-  const [value, setValue] = React.useState(0);
-  const [firstChar, setFirstChar] = React.useState("");
-  const [products, setproducts] = React.useState([]);
+    const [adminFlag, setAdminFlag] = React.useState('user');
+    const [userNameToShow, setUserNameToShow] = React.useState("");
+    const [tokenFlag, setTokenflag] = React.useState(false);
+    const navigate = useNavigate();
+    const { user } = useUser();
+    const [value, setValue] = React.useState(0);
+    const [firstChar, setFirstChar] = React.useState("");
+    const [products, setproducts] = React.useState([]);
     const [error, setError] = React.useState('');
     const [loading, setLoading] = React.useState(false);
     const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  console.log(user);
+    const { notification , clearNotification} = React.useContext(BookingContext);
+    const [showNotificationIcon, setShowNotificationIcon] = React.useState(false);
+    
+  React.useEffect(() => {
+    console.log('Notification State:', notification); // Debugging the state
+    setShowNotificationIcon(notification); 
+  }, [notification]);
+  
   const groupedCategories = [];
   for (let i = 0; i < categories.length; i += 8) {
     groupedCategories.push(categories.slice(i, i + 8));
@@ -226,7 +211,6 @@ export default function Hero() {
           setError("Failed to fetch products");
           setLoading(false);
         }
-      
     };
 
     fetchProducts();
@@ -234,7 +218,7 @@ export default function Hero() {
 
   const getGreetings = () => {
     let currentHour = new Date().getHours();
-    console.log(currentHour)
+    console.log(currentHour)  
     if (currentHour < 12) {
       return "Good Morning!";
     } else if (currentHour >= 12 && currentHour < 17) {
@@ -246,6 +230,10 @@ export default function Hero() {
   const handleCoinsPage = () => {
     navigate("/mycoins");
   };
+  const handleNotification = () => {
+    navigate("/myBooking");
+    clearNotification();
+  }
 
   return (
     <Box
@@ -377,7 +365,7 @@ export default function Hero() {
                   </Box>
                 </Box>
                 {tokenFlag ? (
-                  notification ? (
+                  showNotificationIcon ? (
                   <Box
                     sx={{
                       display: "flex",
@@ -387,7 +375,7 @@ export default function Hero() {
                       padding: "8px",
                       backgroundColor: "transparent",
                     }}
-                    onClick={handleCoinsPage}
+                    onClick={handleNotification}
                   >
                     {/* <img src={coin} alt="coins" width="30px" /> */}
                     <AnimatedBell />
@@ -411,8 +399,6 @@ export default function Hero() {
                         {user.coins}
                       </Typography>
                     )}
-                                        {/* <AnimatedBell /> */}
-
                   </Box>
                   )
                 ) : (
@@ -530,8 +516,7 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 1.3 }}
-              style={{ paddingBottom: "20px" }}
-            >
+              style={{paddingBottom: "20px"}}>
               <Typography
                 pl={2}
                 component="h2"
@@ -556,6 +541,7 @@ export default function Hero() {
                   <Stack
                     key={groupIndex}
                     mt={2}
+                    px={1}
                     direction="row"
                     flexWrap="wrap"
                     spacing={0}
@@ -621,15 +607,6 @@ export default function Hero() {
             >
               <Highlights />
             </motion.div>
-
-            {/* <motion.div  initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 1.5 }}
-              style={{marginBottom:'10px', }}
-              >
-             <Typography pt={2} pl={3} component="h2" variant="h4" gutterBottom color='#343a40' textAlign={'center'}>Why Trash-O-Green</Typography>
-            <SpeechBubbleComponent />
-            </motion.div> */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

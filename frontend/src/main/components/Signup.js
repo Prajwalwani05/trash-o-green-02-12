@@ -4,6 +4,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import CheckIcon from '@mui/icons-material/Check';
 import logo from './assets/logo.png';
+import { useAuth } from '../../context/AuthContext';
+import { jwtDecode } from 'jwt-decode';
+import { useUser } from '../../context/UserContext';
 
 
 const CardStyled = styled(Card)(({ theme }) => ({
@@ -27,6 +30,9 @@ const Signup = () => {
     const [nameErrorMessage, setNameErrorMessage] = React.useState('');
     const [mobileError, setMobileError] = React.useState(false);
     const [mobileErrorMessage, setMobileErrorMessage] = React.useState('');
+          const {token, setToken } = useAuth(); // Access setToken from AuthContext
+                const { user, setUser } = useUser();
+          
     const [formData, setFormData] = useState({
       name: '',
       email: '',
@@ -99,12 +105,29 @@ const Signup = () => {
         try {
           const response = await axios.post(`${REACT_APP_API_URL}/api/users/register`, formData);
           console.log('Signup successful:', response.data);
-          // Trigger success alert and navigate to sign-in
-        setShowAlert(true);
-        setTimeout(() => {
-          setShowAlert(false);
-          navigate('/');
-        }, 3000); // Alert will be visible for 3 seconds
+         if (response.status === 200) {
+                     sessionStorage.setItem('token', response.data.token);
+                     setToken(response.data.token); // Save token globally using context
+                     // Decode the token and set user data in UserContext
+                     const decodedUserData = jwtDecode(response.data.token); // Decode the JWT token
+                     setUser(decodedUserData); // Save user data in UserContext
+                     console.log('successful', response.data);
+                    //  setOpen(true);
+                     const redirectStep = sessionStorage.getItem('RedirectStep');
+                     if (redirectStep)   {
+                       navigate(`/booking?step=${redirectStep}`);
+                       sessionStorage.removeItem('RedirectStep'); // Clear after redirect
+                     } else {
+                       navigate('/'); // Default redirection
+                     }
+                  
+                   }
+          //   // Trigger success alert and navigate to sign-in
+        // setShowAlert(true);
+        // setTimeout(() => {
+        //   setShowAlert(false);
+        //   navigate('/');
+        // }, 3000); // Alert will be visible for 3 seconds
         } catch (error) {
           console.error('Signup error:', error);
           console.log(formData)

@@ -11,10 +11,10 @@ import {
   Divider,
   Button,
 } from "@mui/material";
-import { ArrowFatLinesRight } from "@phosphor-icons/react";
+import { ArrowFatLinesRight, Plus, SealCheck } from "@phosphor-icons/react";
 import axios from "axios";
 
-const ProceedPickup = () => {
+const ProceedPickup = ({clearBooking, setBookings}) => {
   const location = useLocation();
   const booking = location.state?.booking;
   const navigate = useNavigate();
@@ -48,6 +48,17 @@ const handleConfirmPickup = async () => {
 
     if (response.status === 200) {
       alert("Pickup data updated successfully!");
+      setBookings((prevBookings) => {
+        return prevBookings.map((b) =>
+          b.id === booking.id
+            ? { 
+                ...b, 
+                calculatedWeight,  // Update only the calculatedWeight
+              } 
+            : b
+        );
+      });
+      clearBooking();
       navigate("/");
     } else {
       console.error("Error updating data:", response.data);
@@ -59,6 +70,9 @@ const handleConfirmPickup = async () => {
   }
 };
 
+const handleAddMoreTrash = () => {
+
+}
 
   return (
     <Box 
@@ -90,17 +104,23 @@ const handleConfirmPickup = async () => {
           <Box sx={{ padding: "10px" }}>
             {Object.entries(initialTrashType).map(([key, values]) => (
               <Box key={key} my={1}>
-                <Typography variant="body2" mb={2}>
+                <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+                <Typography variant="body2">
                   <strong style={{ display: "flex", alignItems: "center" }}>
-                    <ArrowFatLinesRight size={15} weight="fill" color="#40916c" style={{ marginRight: "5px" }} />
+                    <ArrowFatLinesRight size={15} weight="fill" color="#101010" style={{ marginRight: "5px" }} />
                     {key.charAt(0).toUpperCase() + key.slice(1)}:
                   </strong>
                 </Typography>
+                <Button variant="outlined" onClick={handleAddMoreTrash}
+            endIcon={
+              <Plus size={16} weight="bold" color="#101010" />
+            }>Add More</Button>
+                </Box>
                 {values.length > 0 ? (
                   <ol className="pickupList" style={{ overflow: "scroll", maxHeight: "500px" }}>
                     {values.map((item, index) => (
                       <Box key={index} display="flex" justifyContent="space-between" alignItems="flex-start" pl={3} pt={2}>
-                        <li>{item.split(" - ")[0]}:</li>
+                        <li>{item.split(" -")[0]} :</li>
                         <FormControl variant="standard" sx={{ m: 1, mt: 0, width: "15ch" }}>
                           <Input
                             type="number"
@@ -124,7 +144,11 @@ const handleConfirmPickup = async () => {
             <Button variant="outlined" onClick={() => navigate('/')}>
               Back
             </Button>
-            <Button variant="contained" onClick={handleConfirmPickup}>
+            <Button variant="contained" onClick={handleConfirmPickup}
+            endIcon={
+              <SealCheck size={20} weight="duotone" color="#affc41" />
+            }
+            >
               Confirm Pickup
             </Button>
             </Box>

@@ -10,10 +10,10 @@ const Admin = () => {
   return (
     <Box mb={6}>
         <AllBookings />
-        <AllUsers />
         <AllTrashmen />
-        <AllProducts />
+        <AllUsers />
         <AllPurchasedProducts />
+        <AllProducts />
     </Box>
   )
 }

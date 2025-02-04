@@ -126,60 +126,6 @@ swiper-slide img {
 		transform: rotate(8deg);
 	}
 }
-/* .heroBg{
-  position: relative;
-  background-color: transperant;
-  width: 100%;
-  max-height: 100%;
-	&:after {
-    position: absolute;
-    content: '';
-    top: -50px;
-    left: 0;
-    right: 0;
-    z-index: -1;
-    height: 100%;
-    width: 100%;
-    margin: 0 auto;
-    filter: blur(80px);
-		transform: scale(1);
-    background-image: linear-gradient(
-      80deg,
-      hsl(119deg 100% 63%) 0%,   
-      hsl(114deg 100% 65%) 24%,  
-      hsl(110deg 100% 66%) 20%,
-      hsl(105deg 99% 68%) 47%,   
-      hsl(101deg 99% 70%) 55%,   
-      hsl(96deg 99% 71%) 61%,   
-      hsl(91deg 98% 73%) 66%, 
-      hsl(87deg 98% 75%) 70%,   
-      hsl(82deg 97% 76%) 100%,
-      hsl(77deg 97% 78%) 78%, 
-      hsl(73deg 96% 80%) 82%,   
-      hsl(68deg 95% 81%) 86%,  
-      hsl(64deg 94% 83%) 89%,    
-      hsl(59deg 93% 85%) 94%,   
-      hsl(54deg 91% 86%) 100% 
-    );
-    
-    background-size: 200% 200%;
-    animation: animateGlow 10s ease infinite;
-    
-    @keyframes animateGlow {
-      0%  {
-				background-position: 0% 50%
-			}
-      
-			50% {
-				background-position: 100% 50%
-			}
-			
-      100% {
-				background-position: 0% 50%
-			}
-    }
-  }
-} */
 
 .carousel{
   width: 100%;
@@ -189,9 +135,7 @@ swiper-slide img {
 
   .carousel .carouselInside{
     background: transparent;
-    background: -moz-linear-gradient(0deg, rgba(0,0,0,0.9024859943977591) 11%, rgba(255,255,255,0) 100%);
-    background: -webkit-linear-gradient(0deg, rgba(0,0,0,0.9024859943977591) 11%, rgba(255,255,255,0) 100%);
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.873) 11%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(0deg, rgb(0 0 0 / 74%) 10%, rgba(255, 255, 255, 0) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#ffffff",GradientType=1);    height: 100%;
     width: 100%;
     display: flex;

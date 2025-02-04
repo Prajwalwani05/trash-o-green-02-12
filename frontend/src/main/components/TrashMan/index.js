@@ -3,9 +3,6 @@ import {
   Container,
   Typography,
   CircularProgress,
-  List,
-  ListItem,
-  ListItemText,
   Card,
   Divider,
   Button,
@@ -13,6 +10,8 @@ import {
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import noBookings from "../assets/3991843.jpg";
+
 
 const TrashMan = () => {
   const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
@@ -50,6 +49,13 @@ const TrashMan = () => {
   const handleProceedPickup = (booking) =>{
     navigate('/proceedPickup', { state: { booking } });
   }
+  const validBookings = bookings.filter(
+    (booking) =>
+      booking.status !== "Completed" &&
+      booking.calculatedWeight === null &&
+      booking.paymentStatus !== "Paid"
+  );
+  
   return (
     <Box
       id="hero"
@@ -81,10 +87,30 @@ const TrashMan = () => {
           <CircularProgress sx={{ marginTop: 4 }} />
         ) : error ? (
           <Typography color="error">{error}</Typography>
-        ) : (
-            bookings.map((booking, index) => (
-              (booking.status !== "Completed" && booking.status !== "Cancelled") &&
-              <Box  key={index} sx={{ width: "100%", border:'1px solid lightgrey', borderRadius:'12px'}}>
+        ) : 
+         validBookings.length === 0 ? (
+                      // Show "No Bookings" message only if there are no valid bookings
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        width="100%"
+                        alignItems="center"
+                        justifyContent="center"
+                        mt={12}
+                      >
+                        <img src={noBookings} alt="No bookings found!!" width="150px" />
+                        <Typography variant="h5">Hey, it feels so light!</Typography>
+                        <Typography
+                          variant="h6"
+                          sx={{ fontSize: "14px", fontWeight: "300" }}
+                          color="gray"
+                        >
+                          There is nothing in your scheduled bookings.
+                        </Typography>
+                      </Box>
+                    )
+                    : validBookings.map((booking, index) => (
+                        <Box  key={index} sx={{ width: "100%", border:'1px solid lightgrey', borderRadius:'12px'}}>
               <Card
                 key={index}
                 sx={{
@@ -180,9 +206,9 @@ const TrashMan = () => {
                   <Button onClick={() => handleProceedPickup(booking)} fullWidth variant="contained">Pickup</Button>
                 </Box>
               </Card>
-              </Box>
-            ))
-        )}
+                        </Box>
+                    ))
+                 }
       </Container>
     </Box>
   );

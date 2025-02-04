@@ -67,6 +67,88 @@ const UserBookings = () => {
 const prevBookingsRef = useRef(bookings);
 
 useEffect(() => {
+  const fetchBookings = async () => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      try {
+        const response = await axios.get(
+          `${REACT_APP_API_URL}/api/bookings/all`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+          setBookings(response.data);
+          const decoded = jwtDecode(token);
+          setToken(decoded);
+          const bookingWithWeight = response.data.find((booking) => {
+            try {
+              const calculatedWeight = booking.calculatedWeight
+                ? JSON.parse(booking.calculatedWeight)
+                : null;
+
+              return (
+                calculatedWeight &&
+                Object.keys(calculatedWeight).length > 0 &&
+                booking.trashmanId !== "Not Assigned" &&
+                booking.status !== "Completed" && booking.status !== "Cancelled"
+              );
+            } catch (error) {
+              console.error("Error parsing calculatedWeight:", error);
+              return false;
+            }
+          });
+
+          setShowPopup(!!bookingWithWeight);
+          setNotification(true);
+          setLoading(false);
+           // Check if any booking's status is 'Completed' and redirect
+           const completedBooking = response.data.find(
+            (booking) => booking.status === "Completed"
+          );
+
+          if (completedBooking) {
+            setValue('Completed')
+          }
+        } else {
+          setBookings([]); // Set bookings to an empty array if no data
+          setShowPopup(false);
+          setLoading(false);
+          setNotification(false);
+        }
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+        setError("Failed to fetch bookings");
+        setLoading(false);
+        setShowPopup(false); // Ensure popup is not shown on error
+      }
+    } else {
+      setError("Please log in to view your bookings");
+      setLoading(false);
+      setShowPopup(false);
+    }
+  };
+
+  let interval;
+
+  if (currentStep === 2) {
+    interval = setInterval(() => {
+      fetchBookings(); // Fetch latest bookings every 5 seconds
+    }, 5000);
+  } else {
+    fetchBookings(); // Fetch immediately for other steps
+  }
+
+  // Cleanup function to clear the interval
+  return () => {
+    if (interval) {
+      clearInterval(interval);
+    }
+  };
+}, [currentStep, REACT_APP_API_URL]); // Dependency array
+
+useEffect(() => {
   // Check if there are changes in payment status
   const hasNotPaidBooking = bookings.some(
     (booking) => booking.paymentStatus === "Not Paid"
@@ -74,11 +156,11 @@ useEffect(() => {
 
   // Compare with previous bookings to detect if payment status has changed
   if (hasNotPaidBooking && !prevBookingsRef.current.some((booking) => booking.paymentStatus === "Not Paid")) {
-    setTimerActive(true); // Start the timer when a booking becomes "Not Paid"
-    setTimeLeft(60); // Reset timer to 60 seconds (or whatever your initial time is)
+    setTimerActive(true);
+    setTimeLeft(60);
   } else if (!hasNotPaidBooking) {
-    setTimerActive(false); // Stop the timer when there are no "Not Paid" bookings
-    setTimeLeft(0); // Reset the timer to 0
+    setTimerActive(false);
+    setTimeLeft(0);
   }
 
   // Update the reference to the current bookings after processing
@@ -103,88 +185,7 @@ useEffect(() => {
   return () => clearInterval(timer);
 }, [timerActive, timeLeft]);
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      const token = sessionStorage.getItem("token");
-      if (token) {
-        try {
-          const response = await axios.get(
-            `${REACT_APP_API_URL}/api/bookings/all`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-  
-          if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-            setBookings(response.data);
-            const decoded = jwtDecode(token);
-            setToken(decoded);
-            const bookingWithWeight = response.data.find((booking) => {
-              try {
-                const calculatedWeight = booking.calculatedWeight
-                  ? JSON.parse(booking.calculatedWeight)
-                  : null;
-  
-                return (
-                  calculatedWeight &&
-                  Object.keys(calculatedWeight).length > 0 &&
-                  booking.trashmanId !== "Not Assigned" &&
-                  booking.status !== "Completed" && booking.status !== "Cancelled"
-                );
-              } catch (error) {
-                console.error("Error parsing calculatedWeight:", error);
-                return false;
-              }
-            });
-  
-            setShowPopup(!!bookingWithWeight);
-            setNotification(true);
-            setLoading(false);
-             // Check if any booking's status is 'Completed' and redirect
-             const completedBooking = response.data.find(
-              (booking) => booking.status === "Completed"
-            );
-
-            if (completedBooking) {
-              setValue('Completed')
-            }
-          } else {
-            setBookings([]); // Set bookings to an empty array if no data
-            setShowPopup(false);
-            setLoading(false);
-            setNotification(false);
-          }
-        } catch (error) {
-          console.error("Error fetching bookings:", error);
-          setError("Failed to fetch bookings");
-          setLoading(false);
-          setShowPopup(false); // Ensure popup is not shown on error
-        }
-      } else {
-        setError("Please log in to view your bookings");
-        setLoading(false);
-        setShowPopup(false);
-      }
-    };
-  
-    let interval;
-  
-    if (currentStep === 2) {
-      interval = setInterval(() => {
-        fetchBookings(); // Fetch latest bookings every 5 seconds
-      }, 5000);
-    } else {
-      fetchBookings(); // Fetch immediately for other steps
-    }
-  
-    // Cleanup function to clear the interval
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [currentStep, REACT_APP_API_URL]); // Dependency array
-  
+ 
 //   // Handle activating or deactivating the timer based on payment status
 // useEffect(() => {
 //   const hasNotPaidBooking = bookings.some(
@@ -331,6 +332,8 @@ useEffect(() => {
       setCurrentStep((prevStep) => prevStep - 1);
     }
   };
+
+
   return (
     <Box
       py={12}
@@ -1264,9 +1267,6 @@ useEffect(() => {
               ))}
             </DialogContent>
           )}
-          {/* <DialogActions>
-            <Button endIcon={<CheckCircle size={20} weight="duotone" color="#affc41"/>} variant="contained" onClick={handleClosePopup}>Confirm Weight</Button>
-          </DialogActions> */}
           {currentStep !== 2 && (
             <DialogActions>
               {currentStep === 1 && (
@@ -1292,53 +1292,6 @@ useEffect(() => {
               )}
             </DialogActions>
           )}
-          {/* <DialogTitle textAlign={'center'}>Final Confirmation</DialogTitle> */}
-          {/* <DialogContent>
-            {bookings.map((booking, index) => {
-              // Parse the calculatedWeight string into an object
-              const calculatedWeight = JSON.parse(booking.calculatedWeight);
-              return (
-                <Box key={index} >
-                  {Object.entries(calculatedWeight).map(([key, values]) => (
-                    <Box key={key} my={2}>
-                      {values.length > 0 ? (
-                          values.map((item, index) => {
-                            const parts = item.split(" - ");
-                            const weight = parts[parts.length - 1]; // The weight part is always the last part
-                            return(
-                            <Box display={'flex'} justifyContent={'space-between'} alignItems={'flex-start'} mb={1} 
-                            sx={{backgroundColor: '#e8eaeb6b',
-                              padding: '8px',
-                              borderRadius: '12px',
-                              border: '1px solid #1010102b'}}>
-                              <Box>
-                               <Typography style={{fontSize:'16px', fontWeight:'600'}}>{item.split(" ")[0]}</Typography>
-                               <Typography color="success" variant="body2" style={{fontWeight:'600'}}>{item.split(" -")[1]}</Typography>
-                              </Box>                              
-                              <Box display={'flex'} alignItems={'center'} gap={'5px'}>
-                               <Typography style={{ fontSize: '14px', color:'gray', fontWeight: '600' }}>WEIGHT: </Typography>
-                               <Typography style={{fontSize:'16px', fontWeight:'600'}}>{weight}</Typography>
-                               <Divider sx={{marginTop:'5px', backgroundColor:'#101010'}} flexItem orientation="horizontal"/>
-                               <Typography style={{ fontSize: '16px', fontWeight: '600' }}>Rs. {parseFloat(weight) * parseFloat(item.split(" -")[1].replace("Rs.", "").replace("/kg", ""))}</Typography>
-                              </Box>
-                            </Box>
-                            )
-                          })
-                      ) : (
-                        <Typography pl={1} color="error" mt={1} variant="body2">
-                          No items
-                        </Typography>
-                      )}
-                      <Typography variant="body2" color="gray" fontStyle={'italic'} display={'flex'} gap={'5px'}> <p style={{color:'red'}}>*</p> Please verify and confirm the weight recorded by our trashman.</Typography>
-                    </Box>
-                  ))}
-                </Box>
-              );
-            })}
-          </DialogContent>
-          <DialogActions>
-            <Button endIcon={<CheckCircle size={20} weight="duotone" color="#affc41"/>} variant="contained" onClick={handleClosePopup}>Confirm Weight</Button>
-          </DialogActions> */}
         </Dialog>
       )}
     </Box>
@@ -1346,3 +1299,4 @@ useEffect(() => {
 };
 
 export default UserBookings;
+

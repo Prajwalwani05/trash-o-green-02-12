@@ -1,6 +1,6 @@
 // routes/userRoutes.js
 const express = require('express');
-const { registerUser, loginUser, profileUser, updateUser, getAllUsers , saveUser, deleteUser, addUser, updateUserFromBooking, updateUserCoin} = require('../controllers/userController');
+const { registerUser, loginUser, profileUser, updateUser, getAllUsers , saveUser, deleteUser, addUser, updateUserFromBooking, updateUserCoin, forgotPassword, resetPassword} = require('../controllers/userController');
 // const authenticateAdmin = require('../middleware/authenticateadmin');
 const router = express.Router();
 
@@ -19,5 +19,11 @@ router.delete('/deleteUser/:id', deleteUser);
 // Add User
 router.post('/addUser', addUser)
 
+//Forgot Pass
+// Route to send reset password link
+router.post('/forgot-password', forgotPassword);
+
+// Route to reset the password
+router.post('/reset-password', resetPassword);
 
 module.exports = router;
